@@ -28,6 +28,6 @@
     ".plasmo/index.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "plasmo.d.ts"
+    "plasmo.d.ts",
   ]
 }

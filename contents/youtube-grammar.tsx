@@ -10,6 +10,31 @@ export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () => {
   return document.querySelectorAll("#action-buttons")
 }
 
+const btnStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "28px",
+  padding: "0 14px",
+  backgroundColor: "#f2f2f2",
+  border: "1px solid #d3d3d3",
+  borderRadius: "14px",
+  fontSize: "13px",
+  fontWeight: 500,
+  color: "#065fd4",
+  cursor: "pointer",
+  whiteSpace: "nowrap",
+  lineHeight: 1
+}
+
+const resultBaseStyle: React.CSSProperties = {
+  padding: "8px 10px",
+  fontSize: "13px",
+  color: "#0f0f0f",
+  marginTop: "2px",
+  lineHeight: 1.6
+}
+
 const YoutubeActionButtons = ({ anchor }: PlasmoCSUIProps) => {
   const [translatedText, setTranslatedText] = useState("")
   const [grammarAnalysis, setGrammarAnalysis] = useState("")
@@ -17,7 +42,7 @@ const YoutubeActionButtons = ({ anchor }: PlasmoCSUIProps) => {
 
   // 获取评论文本的函数
   const getCommentText = () => {
-    // anchor 是 #action-buttons，我们需要向上找到评论主体内容
+    // anchor 是 #action-buttons
     const commentElement = anchor?.element.closest("#body")?.querySelector("#content-text")
     return commentElement?.textContent?.trim() || ""
   }
@@ -25,7 +50,7 @@ const YoutubeActionButtons = ({ anchor }: PlasmoCSUIProps) => {
   const handleTranslate = async () => {
     const text = getCommentText()
     if (!text) return
-    
+
     if (!chrome.runtime?.id) {
       alert("插件已更新，请刷新页面后重试。")
       return
@@ -51,7 +76,7 @@ const YoutubeActionButtons = ({ anchor }: PlasmoCSUIProps) => {
   const handleGrammarCheck = async () => {
     const text = getCommentText()
     if (!text) return
-    
+
     if (!chrome.runtime?.id) {
       alert("插件已更新，请刷新页面后重试。")
       return
@@ -77,63 +102,24 @@ const YoutubeActionButtons = ({ anchor }: PlasmoCSUIProps) => {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", marginTop: "8px", gap: "8px" }}>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <button
-          onClick={handleTranslate}
-          disabled={loading}
-          style={{
-            padding: "4px 12px",
-            backgroundColor: "#f0f0f0",
-            border: "1px solid #ccc",
-            borderRadius: "18px",
-            fontSize: "12px",
-            cursor: "pointer",
-            color: "#065fd4",
-            fontWeight: "500"
-          }}>
+    <div style={{ display: "flex", flexDirection: "column", marginTop: "10px", gap: "8px" }}>
+      <div style={{ display: "flex", flexDirection: "row", gap: "8px", alignItems: "center" }}>
+        <button onClick={handleTranslate} disabled={loading} style={{ ...btnStyle, opacity: loading ? 0.5 : 1 }}>
           {loading ? "..." : "翻译"}
         </button>
-        <button
-          onClick={handleGrammarCheck}
-          disabled={loading}
-          style={{
-            padding: "4px 12px",
-            backgroundColor: "#f0f0f0",
-            border: "1px solid #ccc",
-            borderRadius: "18px",
-            fontSize: "12px",
-            cursor: "pointer",
-            color: "#065fd4",
-            fontWeight: "500"
-          }}>
+        <button onClick={handleGrammarCheck} disabled={loading} style={{ ...btnStyle, opacity: loading ? 0.5 : 1 }}>
           {loading ? "..." : "语法学习"}
         </button>
       </div>
-      
+
       {translatedText && (
-        <div style={{
-          padding: "8px",
-          backgroundColor: "#f9f9f9",
-          borderLeft: "3px solid #065fd4",
-          fontSize: "13px",
-          color: "#0f0f0f",
-          marginTop: "4px"
-        }}>
+        <div style={{ ...resultBaseStyle, backgroundColor: "#f9f9f9", borderLeft: "3px solid #065fd4", borderRadius: "0 4px 4px 0" }}>
           <strong>翻译：</strong> {translatedText}
         </div>
       )}
 
       {grammarAnalysis && (
-        <div style={{
-          padding: "8px",
-          backgroundColor: "#f0f7ff",
-          borderLeft: "3px solid #0078d4",
-          fontSize: "13px",
-          color: "#0f0f0f",
-          marginTop: "4px",
-          whiteSpace: "pre-wrap"
-        }}>
+        <div style={{ ...resultBaseStyle, backgroundColor: "#f0f7ff", borderLeft: "3px solid #0078d4", borderRadius: "0 4px 4px 0", whiteSpace: "pre-wrap" }}>
           <strong>语法分析：</strong> {grammarAnalysis}
         </div>
       )}

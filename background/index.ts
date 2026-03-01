@@ -1,6 +1,5 @@
 export {}
 
-// 保持 Service Worker 活跃，防止在等待 AI 响应时被 Chrome 休眠
 const keepAlive = () => setInterval(chrome.runtime.getPlatformInfo, 20000)
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -96,7 +95,7 @@ async function translateText(text: string, targetLang: string) {
     }
   }
 
-  // 降级方案：使用之前的免费 Web 接口
+  // 降级方案，使用之前的免费 Web 接口
   const freeUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(
     text
   )}`
